@@ -1,5 +1,3 @@
-import time
-
 import pygame
 
 from maze import MazeGenerator
@@ -151,5 +149,6 @@ class MainWindow:
     def startGeneration(self):
         self.event.setDone()
         self.MazeGenerator.generate()
+
 
 game = MainWindow()

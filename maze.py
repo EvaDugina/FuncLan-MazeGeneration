@@ -1,4 +1,3 @@
-# Импорты
 import time
 from functools import reduce
 
