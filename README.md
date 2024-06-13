@@ -4,5 +4,5 @@
 https://habr.com/ru/articles/718620/
 
 ## Инструкция по сборке
-- pip install pygame
-- python main.py
+1) pip install pygame 
+2) python main.py
