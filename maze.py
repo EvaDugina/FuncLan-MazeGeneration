@@ -44,16 +44,16 @@ class MazeGenerator:
     #
 
     def changeCellStatus(self, x, y):
-        self.cells[x][y] = 1 - self.cells[x][y]
-        self.Painter.updateCanvas(self.cells)
+        self.begin_cells[x][y] = 1 - self.begin_cells[x][y]
+        self.Painter.updateCanvas(self.begin_cells)
 
     def setRandomGeneration(self):
-        self.cells = [[self.setRandom(i, j) for j in range(self.mazeSize)] for i in range(self.mazeSize)]
-        self.Painter.updateCanvas(self.cells)
+        self.begin_cells = [[self.setRandom(i, j) for j in range(self.mazeSize)] for i in range(self.mazeSize)]
+        self.Painter.updateCanvas(self.begin_cells)
 
     def setEmptyGeneration(self):
-        self.cells = [[0 for j in range(self.mazeSize)] for i in range(self.mazeSize)]
-        self.Painter.updateCanvas(self.cells)
+        self.begin_cells = [[0 for j in range(self.mazeSize)] for i in range(self.mazeSize)]
+        self.Painter.updateCanvas(self.begin_cells)
 
     def setRandom(self, x, y):
         if self.mazeSize // 2 - self.randomRadius < x < self.mazeSize // 2 + self.randomRadius \
@@ -79,19 +79,30 @@ class MazeGenerator:
     #
 
     def generate(self):
+        self.main_while(self.begin_cells, 0)
 
-        while not self.stop:
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.stop = True
+    def main_while(self, cells, depth):
 
-            if self.pause:
-                continue
+        print(f"main_while() -- {depth}")
 
-            self.Painter.updateCanvas(self.cells)
-            self.cells = [[self.getCellStatusByCondition(self.cells[i][j], self.getCountAliveNeighbours(i, j, self.cells)) for j in range(self.mazeSize)] for i in range(self.mazeSize)]
-            time.sleep(1 / self.liveSpeed)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop = True
+
+        if self.pause:
+            return 0
+
+        self.Painter.updateCanvas(cells)
+
+        cells2 = [
+            [self.getCellStatusByCondition(cells[i][j], self.getCountAliveNeighbours(i, j, cells)) for j in
+             range(self.mazeSize)] for i in range(self.mazeSize)]
+        time.sleep(1 / self.liveSpeed)
+
+        self.main_while(cells2, depth+1)
+
+
 
     def clean(self):
         self.setEmptyGeneration()
