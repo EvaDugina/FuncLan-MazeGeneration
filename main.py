@@ -89,6 +89,7 @@ class MainWindow:
         self.mazeSize = self.screenSize // self.cellSize
         painter = Painter(self.root, self.mazeSize, self.cellSize, self)
         self.MazeGenerator = MazeGenerator(self.mazeSize, self.mazeType, self.liveSpeed, painter)
+        self.MazeGenerator.setLiveSpeed(self.liveSpeed)
         self.MazeGenerator.setRandomGeneration()
         self.createButtons()
 

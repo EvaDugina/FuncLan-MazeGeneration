@@ -81,7 +81,6 @@ class MazeGenerator:
     def generate(self):
         self.main_while(self.begin_cells, 0)
 
-
     def main_while(self, cells, depth):
 
         print(f"main_while() -- {depth}")
@@ -95,12 +94,12 @@ class MazeGenerator:
 
         self.Painter.updateCanvas(cells)
 
-        cells2 = [
-            [self.getCellStatusByCondition(cells[i][j], self.getCountAliveNeighbours(i, j, cells)) for j in
-             range(self.mazeSize)] for i in range(self.mazeSize)]
         time.sleep(1 / self.liveSpeed)
 
-        self.main_while(cells2, depth+1)
+        self.main_while(
+            [[self.getCellStatusByCondition(cells[i][j], self.getCountAliveNeighbours(i, j, cells))
+              for j in range(self.mazeSize)] for i in range(self.mazeSize)],
+            depth+1)
 
 
 
