@@ -5,6 +5,20 @@ import pygame
 import random
 
 
+class Recursion(object):
+    "Can call other methods inside..."
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        result = self.func(*args, **kwargs)
+        while callable(result): result = result()
+        return result
+
+    def call(self, *args, **kwargs):
+        return lambda: self.func(*args, **kwargs)
+
+
 class MazeGenerator:
 
     def __init__(self, maze_size, type, live_speed, Painter):
@@ -20,13 +34,11 @@ class MazeGenerator:
     def getIndexesNeighbours(self):
         return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
 
-    # Функция определения кол-ва соседей
+    # Функция определения кол-ва соседей (1-ого порядка, чистая)
     def getCountAliveNeighbours(self, x, y, cells):
-        neighboursIndexes = self.getIndexesNeighbours()
         func_validation = lambda elem: 0 <= elem[0] + x < self.mazeSize and 0 <= elem[1] + y < self.mazeSize
-        neighboursIndexes = list(filter(func_validation, neighboursIndexes))
         func_getNeighboursCount = lambda count, neighbour_xy: count + 1 - cells[x + neighbour_xy[0]][y + neighbour_xy[1]]
-        return reduce(func_getNeighboursCount, neighboursIndexes, 0)
+        return reduce(func_getNeighboursCount, list(filter(func_validation, self.getIndexesNeighbours())), 0)
 
     def getCellStatusByCondition(self, cell, count_neighbours):
         if cell == 1:
@@ -40,7 +52,7 @@ class MazeGenerator:
         return 0
 
     #
-    #
+    # FOR GUI
     #
 
     def changeCellStatus(self, x, y):
@@ -75,12 +87,14 @@ class MazeGenerator:
         self.liveSpeed = live_speed
 
     #
-    #
+    # MAIN FUNCTIONS
     #
 
     def generate(self):
         self.main_while(self.begin_cells, 0)
 
+
+    # 1-ого порядка, но не чистая, хвостовая рекурсия
     def main_while(self, cells, depth):
 
         print(f"main_while() -- {depth}")
@@ -105,5 +119,3 @@ class MazeGenerator:
 
     def clean(self):
         self.setEmptyGeneration()
-
-
